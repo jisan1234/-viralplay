@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViralPlay - Home</title>
+    <!-- Popunder Ad Script -->
+    <script src="https://pl30658727.effectivecpmnetwork.com/60/2c/ef/602ceff8e8dfa54d881925c2c3401dfd.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #0f172a; color: #fff; margin: 0; padding: 0; }
+        header { background: #1e293b; padding: 20px; text-align: center; font-size: 24px; font-weight: bold; color: #38bdf8; }
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: #1e293b; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); }
+        .card img { width: 100%; height: 160px; object-fit: cover; }
+        .card-info { padding: 15px; font-size: 16px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>ViralPlay Streaming</header>
+
+    <div class="container">
+        <h2>Latest Posts</h2>
+        <div class="grid" id="postGrid">Loading...</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabase = window.supabase.createClient('https://xswyniefksqqcxougrhg.supabase.co', 'sb_publishable_TzBtcqBFPHJa3Zl73-eBYQ_ELZcD21Q');
+
+        async function loadPosts() {
+            let { data, error } = await supabase.from('video_posts').select('*').order('created_at', { ascending: false });
+            const grid = document.getElementById('postGrid');
+            
+            if (error || !data.length) {
+                grid.innerHTML = '<p>No posts found.</p>';
+                return;
+            }
+
+            grid.innerHTML = data.map(post => `
+                <div class="card" onclick="location.href='post.html?slug=${post.slug}'">
+                    <img src="${post.thumbnail_url || 'https://via.placeholder.com/300x160'}" alt="Thumb">
+                    <div class="card-info">${post.title}</div>
+                </div>
+            `).join('');
+        }
+        loadPosts();
+    </script>
+</body>
+</html>
