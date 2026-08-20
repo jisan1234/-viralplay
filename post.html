@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post View</title>
+    <!-- Popunder Ad Script -->
+    <script src="https://pl30658727.effectivecpmnetwork.com/60/2c/ef/602ceff8e8dfa54d881925c2c3401dfd.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #0f172a; color: #fff; margin: 0; padding: 20px; }
+        .post-container { max-width: 800px; margin: 40px auto; background: #1e293b; padding: 30px; border-radius: 8px; }
+        a { color: #38bdf8; text-decoration: none; display: inline-block; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="post-container">
+        <a href="index.html">&larr; Back to Home</a>
+        <div id="contentArea">Loading post...</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabase = window.supabase.createClient('https://xswyniefksqqcxougrhg.supabase.co', 'sb_publishable_TzBtcqBFPHJa3Zl73-eBYQ_ELZcD21Q');
+
+        async function fetchSinglePost() {
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get('slug');
+            const area = document.getElementById('contentArea');
+
+            if (!slug) {
+                area.innerHTML = 'Post not found!';
+                return;
+            }
+
+            let { data, error } = await supabase.from('video_posts').select('*').eq('slug', slug).single();
+
+            if (error || !data) {
+                area.innerHTML = 'Post does not exist or has been removed.';
+                return;
+            }
+
+            area.innerHTML = data.content_html;
+            document.title = data.title;
+        }
+        fetchSinglePost();
+    </script>
+</body>
+</html>
